@@ -1,0 +1,16 @@
+# map file for pso path plan 
+# style:
+# obstacle_cnt xx
+# room     vertex_cnt {(xx, xx)...(xx, xx)}
+# obstacle vertex_cnt {(xx, xx)...(xx, xx)}
+## room should always come before obstacle
+
+obstacle_cnt 6
+room     4 { ( 0 , 0 )( 600 , 0 ) (600, 600) ( 0 , 600 ) }
+obstacle 4 { (50,250 ) (100,250 ) (100,400 ) (50,400 )}
+obstacle 4 { (100,0 ) (200,0 ) (200,150 ) (100, 150)}
+obstacle 4 { (150,400 ) (200, 400) (200, 550) (150, 550)}
+obstacle 4 { (250, 150) (350, 150) (350,200 ) (250,200 )}
+obstacle 4 { (200, 300) (350, 300) (350, 350) (200, 350)}
+obstacle 4 { (450, 100) (550, 100) (550, 250) (450, 250)}
+start_end  2  { (1, 300) (450, 400)}

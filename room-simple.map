@@ -1,0 +1,12 @@
+# map file for pso path plan 
+# style:
+# obstacle_cnt xx
+# room     vertex_cnt {(xx, xx)...(xx, xx)}
+# obstacle vertex_cnt {(xx, xx)...(xx, xx)}
+## room should always come before obstacle
+
+obstacle_cnt 2
+room     4 { ( 0 , 0 )( 400 , 0 ) (400, 400) ( 0 , 400 ) }
+obstacle 4 { (50,50)(350,50)(350,150)(50,150)}
+obstacle 4 { (50,250)(350,250)(350,300)(50,300)}
+start_end  2  { (399, 1) (1,1)}
