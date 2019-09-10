@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,15 +8,11 @@
 #include "pso_plan.h"
 
 bool dbg_lv_locked = false;
-int SCR_HEIGHT;
-int SCR_WIDTH;
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-	int scr_border_size = 90;
-	SCR_HEIGHT = QApplication::desktop()->height() - scr_border_size;
-	SCR_WIDTH = QApplication::desktop()->width();
+
 	char * argv0 = (char *) malloc( strlen(argv[0])+1 );
 	strcpy(argv0, argv[0]);
 
@@ -87,9 +84,9 @@ int main(int argc, char *argv[])
 	const char *result_pic_path = "particle.png";
 	const char *fitness_pic_path = "fitness.png";
 	const char *evolve_pic_path = "evolve.png";
-	pso_planer.draw_particle_pic(result_pic_path);
-	pso_planer.draw_fitness_pic(fitness_pic_path);
-	pso_planer.draw_evolve_hist( evolve_pic_path );
+	pso_planer.save_particle_pic(result_pic_path);
+	pso_planer.save_fitness_pic(fitness_pic_path);
+	pso_planer.save_evolve_hist( evolve_pic_path );
 
 	return 0;
 }

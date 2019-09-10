@@ -12,6 +12,9 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPointF>
+#include <QApplication>
+#include <QDesktopWidget>
+
 #include "pso_plan.h"
 
 vertex_t offset;  //offset for coordinate convert
@@ -37,6 +40,9 @@ int level_debug(int level, char const*__restrict fmt, ...)
 
 pso_plan::pso_plan()
 {
+	int scr_border_size = 90;
+	SCR_HEIGHT = QApplication::desktop()->height() - scr_border_size;
+	SCR_WIDTH = QApplication::desktop()->width();
 }
 
 void pso_plan::init_pso_conf()
@@ -783,7 +789,7 @@ void pso_plan::convert_map_backto_coord1()
 }
 
 
-float zoom;
+float zoom = 1.0f;
 
 void pso_plan::draw_obstacle(QPainter & painter)
 {
@@ -802,11 +808,13 @@ void pso_plan::draw_obstacle(QPainter & painter)
 		}
 		painter_path.addPolygon( obst_polygon );
 		painter.fillPath(painter_path, QBrush(Qt::gray));
+		level_debug(5, "added obstacle %d\n", i);
 	}
 }
 
 void pso_plan::draw_dimension(QPainter & painter)
 {
+	level_debug(5, "+++ %s\n", __func__);
 	painter.setPen(Qt::yellow);
 	for( int d=0; d<conf.dimension; ++d)
 	{
@@ -817,9 +825,12 @@ void pso_plan::draw_dimension(QPainter & painter)
 	}	
 	painter.drawLine(start.x * zoom, start.y * zoom,
 		   	end.x * zoom, end.y * zoom);
+	level_debug(5, "--- %s\n", __func__);
 }
-void pso_plan::draw_evolve_hist(const char * pic_path)
+
+void pso_plan::save_evolve_hist(const char * pic_path)
 {
+	level_debug(5, "+++ %s\n", __func__);
 	obstacle_t * room = &map.obsts[0];
 	float width = max(fabs(room->verts[1].x - room->verts[0].x),
 						fabs(room->verts[2].x - room->verts[1].x));
@@ -878,12 +889,14 @@ void pso_plan::draw_evolve_hist(const char * pic_path)
 	painter.drawPolyline( points, conf.dimension + 2);
 	delete []points;
 	draw_dimension(painter);
+	painter.end();
 	evolve_pic.save(pic_path);
+	level_debug(5, "--- %s\n", __func__);
 }
 
-void pso_plan::draw_particle_pic(const char * pic_path)
+void pso_plan::save_particle_pic(const char * pic_path)
 {
-
+	level_debug(5, "+++ %s\n", __func__);
 	obstacle_t * room = &map.obsts[0];
 	float width = max(fabs(room->verts[1].x - room->verts[0].x),
 						fabs(room->verts[2].x - room->verts[1].x));
@@ -891,8 +904,9 @@ void pso_plan::draw_particle_pic(const char * pic_path)
 						fabs(room->verts[2].y - room->verts[1].y));
 	zoom = (float)SCR_HEIGHT / height;
 
-    QPixmap result_pic(width*zoom , height*zoom);
-    QPainter painter(&result_pic);
+    QPixmap result_pic(width*zoom, height*zoom);
+    QPainter painter;//(&result_pic);
+	painter.begin(&result_pic);
 	painter.fillRect(0, 0, SCR_WIDTH, SCR_HEIGHT, Qt::black);
 
 	painter.setPen(Qt::white);
@@ -927,7 +941,7 @@ void pso_plan::draw_particle_pic(const char * pic_path)
 		points[j+1].setY( vert_path[info.gbest_id].verts[j].y * zoom );
 	}
 	painter.drawPolyline( points, conf.dimension + 2);
-	delete []points;
+	//delete []points;
 
 	draw_dimension(painter);
 
@@ -937,11 +951,15 @@ void pso_plan::draw_particle_pic(const char * pic_path)
 		painter.setFont(QFont("", 60));
 		painter.drawText(0.35 * width * zoom, 0.48 * height * zoom, "FAIL!!!");
 	}
+	painter.end();
     result_pic.save(pic_path);
+	level_debug(5, "--- %s\n", __func__);
+	//delete []points;
 }
 
-void pso_plan::draw_fitness_pic(const char *pic_path)
+void pso_plan::save_fitness_pic(const char *pic_path)
 {
+	level_debug(5, "+++ %s\n", __func__);
 	QPixmap fitness_pic(SCR_WIDTH, SCR_HEIGHT);
 	QPainter painter( &fitness_pic );
 	painter.fillRect(0, 0, SCR_WIDTH, SCR_HEIGHT, Qt::black);
@@ -980,11 +998,14 @@ void pso_plan::draw_fitness_pic(const char *pic_path)
 			fitness_x += fitness_x_step;
 		}
 	}
+	painter.end();
 	fitness_pic.save(pic_path);
+	level_debug(5, "--- %s\n", __func__);
 }
 
 void util_draw_plain_coord()
 {
+	level_debug(5, "+++ %s\n", __func__);
 	QPixmap coord(1200, 800);
 	QPainter painter2(&coord);
 	painter2.fillRect(0,0,1200,800, Qt::black);
@@ -1007,4 +1028,5 @@ void util_draw_plain_coord()
 		}
 	}
 	coord.save("coord.png");
+	level_debug(5, "--- %s\n", __func__);
 }

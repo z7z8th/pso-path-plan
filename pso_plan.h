@@ -177,9 +177,9 @@ public:
 	void convert_map_backto_coord1();
 	void draw_obstacle(QPainter & painter);
 	void draw_dimension(QPainter & painter);
-	void draw_evolve_hist(const char * pic_path);
-	void draw_particle_pic(const char *);
-	void draw_fitness_pic(const char *);
+	void save_evolve_hist(const char * pic_path);
+	void save_particle_pic(const char *);
+	void save_fitness_pic(const char *);
 public:
 	friend void * particle_thread( void * );
 protected:
@@ -196,6 +196,9 @@ private:
 	vertex_t end;
 	float step;
 	vector< vector<float> > fitness_vt;
+	
+	int SCR_HEIGHT;
+	int SCR_WIDTH;
 };
 
 
